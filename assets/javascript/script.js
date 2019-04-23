@@ -9,15 +9,19 @@ var config = {
 
 firebase.initializeApp(config);
 var database = firebase.database();
+console.log(moment().format("DD/MM/YY hh:mm A"));
 
 
 $("#add-train").on("click", function (event) {
     event.preventDefault();
 
-    var train = $("#train-input").val();
-    var destination = $("#destination-input").val();
-    var firstTrain = $("#first-train-input").val();
-    var frequency = $("#frequency-input").val();
+    var train = $("#train-input").val().trim();
+    var destination = $("#destination-input").val().trim();
+    var firstTrain = $("#first-train-input").val().trim();
+    var frequency = $("#frequency-input").val().trim();
+
+    var momentTrain = moment(firstTrain, "HH:mm A").format("HH:mm")
+    console.log(momentTrain);
 
     // var momentInst = moment(start, "MM/DD/YYY")
     // var startMoment = moment(start).toNow();
@@ -40,7 +44,7 @@ $("#add-train").on("click", function (event) {
     var trainInfo = {
         train: train,
         destination: destination,
-        firstTrain: firstTrain,
+        momentTrain: momentTrain,
         frequency: frequency
     }
 
@@ -49,7 +53,7 @@ $("#add-train").on("click", function (event) {
     $("#train-input").val("");
     $("#destination-input").val("");
     $("#first-train-input").val("");
-    $("#monthly-input").val("");
+    $("#frequency-input").val("");
 
 
 });
@@ -58,8 +62,8 @@ database.ref().on("child_added", function (child) {
 
     var trainName = child.val().train;
     var trainDestination = child.val().destination;
-    var trainFirst = child.val().firstTrain;
     var trainFrequency = child.val().frequency;
+    var trainFirst = child.val().momentTrain;
 
 
     // var momentInst = moment(empStart, "MM/DD/YYY")
@@ -71,12 +75,12 @@ database.ref().on("child_added", function (child) {
 
     var trainTd = $("<td>").text(trainName);
     var destinationTd = $("<td>").text(trainDestination);
-    var firstTrainTd = $("<td>").text(trainFirst);
     var trainFrequencyTd = $("<td>").text(trainFrequency);
-    // var monthlyRateTd = $("<td>").text(empRate);
-    // var totalTd = $("<td>").text("Too much son!!");
+    var nextArrivalTd = $("<td>").text("Logic needed for next arrival!!");
+    var minutesAwayTd = $("<td>").text("Logic needed for minutes away!!");
+    var firstTrainTd = $("<td>").text(trainFirst);
 
-    tRow.append(trainTd, destinationTd, firstTrainTd, trainFrequencyTd)
+    tRow.append(trainTd, destinationTd, trainFrequencyTd, nextArrivalTd, minutesAwayTd);
     tBody.append(tRow);
 
 
