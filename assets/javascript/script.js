@@ -19,21 +19,27 @@ $("#add-train").on("click", function (event) {
     var destination = $("#destination-input").val().trim();
     var firstTrain = $("#first-train-input").val().trim();
     var frequency = $("#frequency-input").val().trim();
+
     // Convert the first train to military time
-    var momentTrain = moment(firstTrain, "HH:mm A").format("HH:mm")
-    console.log(momentTrain);
+    var momentTrain = moment(firstTrain, "HH:mm A");
+    console.log(typeof momentTrain);
+
     // Grab the current time
-    var currentTime = moment().format("HH:mm");
+    var currentTime = moment();
     console.log(currentTime);
+
     // Grab the difference of the current time with the upcoming train
     var differenceTime = momentTrain.diff(currentTime, "minutes") * -1;
     console.log("Difference between now entered time", differenceTime);
+
     // Get the remainder using %. Ex 10 divided by 3 = 3 with remaidner of 1. % finds
     var remainderCalc = differenceTime % frequency;
     console.log("Math Difference", remainderCalc);
+
     // Subtract the remainder from the frequency and store in a variable
     var untilArrival = frequency - remainderCalc
     console.log("until arrival is:", untilArrival);
+    
     // Get the future time
     var futureTrainTime = currentTime.add(untilArrival, "m").format("HH:mm")
     console.log("future train time:" + futureTrainTime);
@@ -41,7 +47,7 @@ $("#add-train").on("click", function (event) {
     var trainInfo = {
         train: train,
         destination: destination,
-        momentTrain: momentTrain,
+        momentTrain: momentTrain.format("HH:mm"),
         frequency: frequency,
         futureTrainTime: futureTrainTime,
         untilArrival:untilArrival
